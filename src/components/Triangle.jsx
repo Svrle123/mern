@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Button from './Button';
+import { forEachRight } from 'lodash';
 
 const Triangle = ({ isSelectTriangle, drawData }) => {
     const [point, setPoint] = useState({ x: null, y: null });
@@ -15,10 +16,10 @@ const Triangle = ({ isSelectTriangle, drawData }) => {
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
         if (drawData) {
-            drawData.forEach((coordinate) => {
+            forEachRight(drawData, (coordinate) => {
                 let x = coordinate.x + node.x;
                 let y = coordinate.y + node.y;
-                drawPoint(context, x, y);
+                drawData[0].id === coordinate.id ? drawPoint(context, x, y, true) : drawPoint(context, x, y);
             })
         }
 
@@ -38,11 +39,17 @@ const Triangle = ({ isSelectTriangle, drawData }) => {
         });
     }
 
-    const drawPoint = (context, x, y) => {
+    const drawPoint = (context, x, y, isInitial = false) => {
         context.beginPath();
         context.arc(x, y, 3, 0, 2 * Math.PI);
-        context.stroke();
+        context.fillStyle = "black";
+        context.strokeStyle = "black";
+        if (isInitial) {
+            context.fillStyle = "#FF0000";
+            context.strokeStyle = "#FF0000";
+        }
         context.fill();
+        context.stroke();
     }
 
     const saveSelectedPosition = () => {

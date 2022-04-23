@@ -4,28 +4,34 @@ import List from "./components/List";
 
 const drawData = [
   {
-    x: 117,
-    y: 23,
+    id: "asfgdsdfafa",
+    x: 126,
+    y: 212,
   },
   {
-    x: 125,
-    y: 73,
+    id: "123414243523",
+    x: 124,
+    y: 33,
   },
   {
-    x: 12,
-    y: 22,
+    id: "1235asdfaf",
+    x: 105,
+    y: 53,
   },
   {
-    x: 123,
-    y: 211,
+    id: "000000008888",
+    x: 155,
+    y: 93,
   },
   {
-    x: 57,
-    y: 192,
+    id: "46574tttttttt",
+    x: 25,
+    y: 235,
   },
   {
-    x: 23,
-    y: 11,
+    id: "aaaaaaa11111",
+    x: 207,
+    y: 222,
   },
 ]
 
@@ -35,7 +41,7 @@ const App = () => {
     <div className="App">
       <Triangle isSelectTriangle />
       <Triangle drawData={drawData} />
-      {false && <List />}
+      <List users={drawData} />
     </div>
   );
 }
