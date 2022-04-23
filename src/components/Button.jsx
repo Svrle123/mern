@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Button = ({ onClick }) => {
+const Button = ({ title, disabled, onClick }) => {
     return (
-        <div onClick={onClick}></div>
+        <button className="btn" onClick={onClick} disabled={disabled}>{title}</button>
     )
 }
 

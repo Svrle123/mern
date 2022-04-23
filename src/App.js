@@ -1,14 +1,40 @@
 import React from "react";
-import Button from "./components/Button";
 import Triangle from "./components/Triangle";
 import List from "./components/List";
+
+const drawData = [
+  {
+    x: 117,
+    y: 23,
+  },
+  {
+    x: 125,
+    y: 73,
+  },
+  {
+    x: 12,
+    y: 22,
+  },
+  {
+    x: 123,
+    y: 211,
+  },
+  {
+    x: 57,
+    y: 192,
+  },
+  {
+    x: 23,
+    y: 11,
+  },
+]
+
 
 const App = () => {
   return (
     <div className="App">
-      <Triangle />
-      <Button />
-      {false && <Triangle />}
+      <Triangle isSelectTriangle />
+      <Triangle drawData={drawData} />
       {false && <List />}
     </div>
   );
