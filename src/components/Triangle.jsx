@@ -18,7 +18,7 @@ const Triangle = () => {
     return (
         <canvas onClick={(event) => {
             setPoint({ x: event.clientX, y: event.clientY })
-        }} ref={canvasRef} id="triangle" width="200" height="100" style={{ border: "1px solid #000000" }}></canvas>
+        }} ref={canvasRef} id="triangle" className='triangle' width="250" height="250"></canvas>
     )
 }
 
