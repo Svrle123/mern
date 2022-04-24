@@ -5,7 +5,7 @@ import List from "./components/List";
 const drawData = [
   {
     id: "asfgdsdfafa",
-    x: 127,
+    x: 125,
     y: 212,
   },
   {
@@ -33,8 +33,7 @@ const drawData = [
     x: 207,
     y: 222,
   },
-]
-
+];
 
 const App = () => {
   return (
@@ -44,6 +43,6 @@ const App = () => {
       <List users={drawData} />
     </div>
   );
-}
+};
 
 export default App;
