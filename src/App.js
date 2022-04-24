@@ -5,7 +5,7 @@ import List from "./components/List";
 const drawData = [
   {
     id: "asfgdsdfafa",
-    x: 126,
+    x: 127,
     y: 212,
   },
   {
