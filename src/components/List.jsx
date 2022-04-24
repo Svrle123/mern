@@ -1,10 +1,12 @@
-import React from 'react'
+import React from 'react';
 
-const List = ({ users }) => {
+const List = ({ answers }) => {
+    const showOnlyTen = answers.slice(-10);
+    showOnlyTen.reverse();
     return (
         <ul>
-            {users.map((user) => (
-                <li key={user.id}>{user.id}</li>
+            {showOnlyTen.map((answer) => (
+                <li key={answer._id}>{answer._id}</li>
             ))}
         </ul>
     )

@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Button from './Button';
-import { forEachRight } from 'lodash';
 
-const Triangle = ({ isSelectTriangle, drawData }) => {
+const Triangle = ({ isSelectTriangle, answers, postData }) => {
     const [point, setPoint] = useState({ x: null, y: null });
     const [node, setNode] = useState({ x: null, y: null });
     const [payload, setPaylod] = useState({ x: null, y: null });
@@ -15,11 +14,11 @@ const Triangle = ({ isSelectTriangle, drawData }) => {
 
         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
-        if (drawData) {
-            forEachRight(drawData, (coordinate) => {
-                let x = coordinate.x + node.x;
-                let y = coordinate.y + node.y;
-                drawData[0].id === coordinate.id ? drawPoint(context, x, y, true) : drawPoint(context, x, y);
+        if (answers) {
+            answers.forEach((coordinate) => {
+                let x = coordinate.x;
+                let y = coordinate.y;
+                answers[answers.length - 1]._id === coordinate._id ? drawPoint(context, x, y, true) : drawPoint(context, x, y);
             })
         }
 
@@ -29,7 +28,7 @@ const Triangle = ({ isSelectTriangle, drawData }) => {
             setPaylod({ x, y });
             drawPoint(context, x, y);
         }
-    }, [point]);
+    }, [point, answers]);
 
     const getNodeCoordinates = (node) => {
         const nodePostion = node.getBoundingClientRect();
@@ -52,14 +51,16 @@ const Triangle = ({ isSelectTriangle, drawData }) => {
         context.stroke();
     }
 
-    const saveSelectedPosition = () => {
-        // POST api call here, payload == node
+    const postAnswer = async () => {
+        if (payload.x || payload.y) {
+            await postData(payload);
+        }
     }
 
     return (
         <React.Fragment>
             <canvas onClick={(event) => {
-                if (!drawData) {
+                if (!answers) {
                     setPoint({
                         x: event.clientX,
                         y: event.clientY,
@@ -67,7 +68,7 @@ const Triangle = ({ isSelectTriangle, drawData }) => {
                 }
             }} ref={canvasRef} className='triangle' width="250" height="250"></canvas>
             {isSelectTriangle &&
-                <Button onClick={() => saveSelectedPosition()} title={"Save answer"} />
+                <Button onClick={() => postAnswer()} title={"Save answer"} />
             }
         </React.Fragment>
     );
