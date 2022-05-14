@@ -2,22 +2,22 @@ import React, { useState } from "react";
 import Triangle from "./components/Triangle";
 import List from "./components/List";
 
-const App = ({ apiService }) => {
+const App = ({ answersRouteService }) => {
   const [data, setData] = useState([]);
 
   const getData = async () => {
-    const answers = await apiService.getAnswers();
+    const answers = await answersRouteService.get();
     setData(answers);
   }
 
   const postData = async (answer) => {
-    await apiService.postAnswer(answer);
+    await answersRouteService.post(answer);
     getData();
   }
 
   return (
     <div className="App">
-      <Triangle isSelectTriangle getData={getData} postData={postData} />
+      <Triangle isSelectTriangle postData={postData} />
       {data.length ?
         <React.Fragment>
           <Triangle answers={data} />

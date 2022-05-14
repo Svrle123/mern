@@ -1,57 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Button from './Button';
+import { Stage, Layer, Circle } from 'react-konva';
 
 const Triangle = ({ isSelectTriangle, answers, postData }) => {
-    const [point, setPoint] = useState({ x: null, y: null });
-    const [node, setNode] = useState({ x: null, y: null });
-    const [payload, setPaylod] = useState({ x: null, y: null });
+    const circleRef = useRef(null)
 
-    const canvasRef = useRef(null);
-
-    useEffect(() => {
-        const context = canvasRef.current.getContext("2d");
-        getNodeCoordinates(context.canvas);
-
-        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-
-        if (answers) {
-            answers.forEach((coordinate) => {
-                let x = coordinate.x;
-                let y = coordinate.y;
-                answers[answers.length - 1]._id === coordinate._id ? drawPoint(context, x, y, true) : drawPoint(context, x, y);
-            })
-        }
-
-        if (point.x || point.y) {
-            let x = point.x - node.x;
-            let y = point.y - node.y;
-            setPaylod({ x, y });
-            drawPoint(context, x, y);
-        }
-    }, [point, answers]);
-
-    const getNodeCoordinates = (node) => {
-        const nodePostion = node.getBoundingClientRect();
-        setNode({
-            x: nodePostion.left,
-            y: nodePostion.top,
-        });
-    }
-
-    const drawPoint = (context, x, y, isInitial = false) => {
-        context.beginPath();
-        context.arc(x, y, 3, 0, 2 * Math.PI);
-        context.fillStyle = "black";
-        context.strokeStyle = "black";
-        if (isInitial) {
-            context.fillStyle = "#FF0000";
-            context.strokeStyle = "#FF0000";
-        }
-        context.fill();
-        context.stroke();
-    }
-
-    const postAnswer = async () => {
+    const postAnswer = async (payload) => {
+        debugger
         if (payload.x || payload.y) {
             await postData(payload);
         }
@@ -59,19 +14,63 @@ const Triangle = ({ isSelectTriangle, answers, postData }) => {
 
     return (
         <React.Fragment>
-            <canvas onClick={(event) => {
-                if (!answers) {
-                    setPoint({
-                        x: event.clientX,
-                        y: event.clientY,
-                    });
-                }
-            }} ref={canvasRef} className='triangle' width="250" height="250"></canvas>
-            {isSelectTriangle &&
-                <Button onClick={() => postAnswer()} title={"Save answer"} />
+            <div className='triangle'>
+                <Stage width={300} height={300}>
+                    <Layer>
+                        {!answers ?
+                            <Circle
+                                x={150}
+                                y={150}
+                                width={25}
+                                height={25}
+                                fill="red"
+                                draggable
+                                ref={circleRef}
+                                dragBoundFunc={(event) => {
+                                    const radius = 12.5;
+                                    const triangleHeight = 261 - 2 * radius;
+                                    const maxWidth = 300;
+                                    const firstTriangleHypo = (radius * Math.sin(2.0944)) / Math.sin(0.5236);
+                                    const lastTriangleheight = ((firstTriangleHypo / 2) * Math.sin(1.0472)) / Math.sin(0.5236);
+
+                                    const maxHeight = lastTriangleheight + Math.sin(0.5236) * radius;
+                                    const height = Math.max(
+                                        Math.min(event.y, triangleHeight + radius),
+                                        radius,
+                                        maxHeight
+                                    );
+                                    const heightPercentage = height / 261;
+                                    const widthLimit = (heightPercentage * maxWidth) / 2;
+                                    const widthAdjustment = radius - Math.cos(0.5236) * radius;
+
+                                    let positiveMax = widthLimit + maxWidth / 2 - radius - widthAdjustment;
+                                    positiveMax = positiveMax < 150 ? 150 : positiveMax;
+                                    let positiveMin = 150 - widthLimit + radius + widthAdjustment;
+                                    positiveMin = positiveMin > 150 ? 150 : positiveMin;
+                                    const width = Math.max(Math.min(event.x, positiveMax), positiveMin);
+
+                                    return { x: width, y: height };
+                                }}
+                            />
+                            : answers.map((answer) => (
+                                <Circle
+                                    x={answer.x}
+                                    y={answer.y}
+                                    width={answer._id !== answers[answers.length - 1]._id ? 15 : 25}
+                                    height={answer._id !== answers[answers.length - 1]._id ? 15 : 25}
+                                    fill={answer._id !== answers[answers.length - 1]._id ? "black" : "red"}
+                                />
+                            ))}
+                    </Layer>
+                </Stage>
+            </div>
+            {
+                isSelectTriangle &&
+                <Button onClick={() => postAnswer({ x: circleRef.current.x(), y: circleRef.current.y() })} title={"Save answer"} />
             }
         </React.Fragment>
     );
+
 };
 
 export default Triangle;

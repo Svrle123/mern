@@ -1,19 +1,20 @@
 import axios from 'axios';
 
 class Api {
-    constructor(baseUrl) {
-        this.baseUrl = baseUrl;
+    baseUrl = "http://localhost:4000/";
+
+    constructor(endpoint) {
+        this.baseUrl = this.baseUrl + endpoint;
     }
 
-    async postAnswer(payload) {
+    async post(payload) {
         await axios.post(this.baseUrl, payload)
     }
 
-    async getAnswers() {
+    async get() {
         const data = await axios.get(this.baseUrl);
         return data.data;
     }
-
 }
 
 export default Api;
